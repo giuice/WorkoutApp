@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { Card, Switch } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { Card, Switch, useTheme, Text, Button, TextInput, Surface } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
 
 type SetupViewProps = {
   workTime: string;
@@ -19,6 +19,8 @@ type SetupViewProps = {
   includeCooldown: boolean;
   setIncludeCooldown: (include: boolean) => void;
   startWorkout: () => void;
+  isDarkTheme: boolean;
+  setIsDarkTheme: (dark: boolean) => void;
 };
 
 export default function SetupView({
@@ -37,125 +39,133 @@ export default function SetupView({
   includeCooldown,
   setIncludeCooldown,
   startWorkout,
+  isDarkTheme,
+  setIsDarkTheme,
 }: SetupViewProps) {
 
-  const { colors } = useTheme();
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
-
+  const theme = useTheme();
+  
   useEffect(() => {
-    const theme = (isDarkTheme ? 'dark' : 'light');
+    //theme.dark = isDarkTheme;
   }, [isDarkTheme]);
+
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <Surface style={styles.scrollContainer}>
       <Card style={styles.cardContainer}>
         <Card.Title
           title="Workout Setup"
-          titleStyle={[styles.title, { color: colors.primary }]}
+          titleStyle={[styles.title, { color: theme.colors.primary }]}
           right={() => (
-            <Switch
+            <Switch style={{ marginRight: 10 }}
               value={isDarkTheme}
               onValueChange={() => setIsDarkTheme(!isDarkTheme)}
-              color={colors.primary}
+              color={theme.colors.primary}
             />
           )}
         />
         <Card.Content>
-          <View style={styles.inputContainer}>
-            <Text style={[styles.label, { color: colors.text }]}>Work Time (seconds):</Text>
+          <Surface style={styles.inputContainer}>
+            <Text style={[styles.label, { color: theme.colors.secondary }]}>Work Time (seconds):</Text>
             <TextInput
-              style={[styles.input, { borderColor: colors.border }]}
+              mode="flat"
               value={workTime}
               onChangeText={setWorkTime}
               keyboardType="numeric"
               placeholder="e.g., 30"
-              placeholderTextColor={'#888'}
+              placeholderTextColor={theme.colors.primary}
             />
-          </View>
+          </Surface>
 
-          <View style={styles.inputContainer}>
-            <Text style={[styles.label, { color: colors.text }]}>Rest Time (seconds):</Text>
+          <Surface style={styles.inputContainer}>
+            <Text style={[styles.label, { color: theme.colors.secondary }]}>Rest Time (seconds):</Text>
             <TextInput
-              style={[styles.input, { borderColor: colors.border }]}
+              mode="flat"
               value={restTime}
               onChangeText={setRestTime}
               keyboardType="numeric"
               placeholder="e.g., 30"
-              placeholderTextColor={'#888'}
+              placeholderTextColor={theme.colors.primary}
             />
-          </View>
+          </Surface>
 
-          <View style={styles.inputContainer}>
-            <Text style={[styles.label, { color: colors.text }]}>Number of Sets:</Text>
+          <Surface style={styles.inputContainer}>
+            <Text style={[styles.label, { color: theme.colors.secondary }]}>Number of Sets:</Text>
             <TextInput
-              style={[styles.input, { borderColor: colors.border }]}
+              mode="flat"
               value={sets}
               onChangeText={setSets}
               keyboardType="numeric"
               placeholder="e.g., 10"
-              placeholderTextColor={'#888'}
+              
             />
-          </View>
+          </Surface>
 
-          <View style={styles.optionContainer}>
-            <View style={styles.optionRow}>
-              <Text style={[styles.label, { color: colors.text }]}>Include Warmup</Text>
-              <Switch value={includeWarmup} onValueChange={setIncludeWarmup} color={colors.primary} />
-            </View>
+          <Surface style={styles.optionContainer}>
+            <Surface style={styles.optionRow}>
+              <Text style={[styles.label, { color: theme.colors.secondary }]}>Include Warmup</Text>
+              <Switch value={includeWarmup} onValueChange={setIncludeWarmup} color={theme.colors.primary} />
+            </Surface>
             {includeWarmup && (
-              <View style={styles.inputContainer}>
-                <Text style={[styles.label, { color: colors.text }]}>Warmup Time (seconds):</Text>
+              <Surface style={styles.inputContainer}>
+                <Text style={[styles.label, { color: theme.colors.secondary }]}>Warmup Time (seconds):</Text>
                 <TextInput
-                  style={[styles.input, { borderColor: colors.border }]}
+                  mode="flat"
                   value={warmupTime}
                   onChangeText={setWarmupTime}
                   keyboardType="numeric"
                   placeholder="e.g., 60"
-                  placeholderTextColor={'#888'}
-                />
-              </View>
-            )}
-          </View>
 
-          <View style={styles.optionContainer}>
-            <View style={styles.optionRow}>
-              <Text style={[styles.label, { color: colors.text }]}>Include Cooldown</Text>
-              <Switch value={includeCooldown} onValueChange={setIncludeCooldown} color={colors.primary} />
-            </View>
+                />
+              </Surface>
+            )}
+          </Surface>
+
+          <Surface style={styles.optionContainer}>
+            <Surface style={styles.optionRow}>
+              <Text style={[styles.label, { color: theme.colors.secondary }]}>Include Cooldown</Text>
+              <Switch value={includeCooldown} onValueChange={setIncludeCooldown} color={theme.colors.primary} />
+            </Surface>
             {includeCooldown && (
-              <View style={styles.inputContainer}>
-                <Text style={[styles.label, { color: colors.text }]}>Cooldown Time (seconds):</Text>
+              <Surface style={styles.inputContainer}>
+                <Text style={[styles.label, { color: theme.colors.secondary }]}>Cooldown Time (seconds):</Text>
                 <TextInput
-                  style={[styles.input, { borderColor: colors.border }]}
+                  mode="flat"
                   value={cooldownTime}
                   onChangeText={setCooldownTime}
                   keyboardType="numeric"
                   placeholder="e.g., 60"
-                  placeholderTextColor={'#888'}
                 />
-              </View>
+              </Surface>
             )}
-          </View>
+          </Surface>
         </Card.Content>
 
         <Card.Actions>
-          <TouchableOpacity style={[styles.startButton, { backgroundColor: colors.primary }]} onPress={startWorkout}>
-            <Text style={styles.startButtonText}>Start Workout</Text>
-          </TouchableOpacity>
+            <Button
+            mode='contained'
+            style={[styles.startButton, { backgroundColor: theme.colors.primary }]}
+            labelStyle={{ fontWeight: 'bold' }}
+            onPress={startWorkout}
+            icon={() => <Ionicons name="play" size={24} ></Ionicons>}
+            >
+            Start Workout
+            </Button>
         </Card.Actions>
       </Card>
-    </ScrollView>
+    </Surface>
   );
 }
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flexGrow: 1,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 20,
+    backgroundColor: '#f6f6f6',
   },
   cardContainer: {
-    width: '90%',
+    width: '100%',
     borderRadius: 10,
     elevation: 4,
   },
@@ -171,13 +181,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
   },
-  input: {
-    backgroundColor: 'white',
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-    borderWidth: 1,
-  },
   optionContainer: {
     marginBottom: 15,
   },
@@ -187,15 +190,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   startButton: {
-    padding: 15,
-    borderRadius: 5,
+
+    borderRadius: 15,
     alignItems: 'center',
     marginTop: 10,
     width: '100%',
-  },
-  startButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });

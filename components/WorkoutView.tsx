@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import {  Text, Button, useTheme } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
 
 type WorkoutViewProps = {
     currentPhase: string;
@@ -20,13 +22,18 @@ export default function WorkoutView({
     togglePause,
     resetWorkout,
 }: WorkoutViewProps) {
+    const theme = useTheme();
     return (
-        <View style={styles.workoutContainer}>
-            <Text style={styles.phaseText}>{currentPhase.toUpperCase()}</Text>
+        <View style={[styles.workoutContainer, { backgroundColor: theme.colors.background }]}>
+            <Text style={[styles.phaseText, { color: theme.colors.primary }]}>
+                {currentPhase.toUpperCase()}
+            </Text>
             {currentPhase !== 'finished' && (
                 <>
-                    <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
-                    <Text style={styles.timerLabel}>
+                    <Text style={[styles.timerText, { color: theme.colors.primary }]}>
+                        {formatTime(timeLeft)}
+                    </Text>
+                    <Text style={[styles.timerLabel, { color: theme.colors.secondary }]}>
                         {currentPhase === 'work'
                             ? 'Work Time'
                             : currentPhase === 'rest'
@@ -37,16 +44,36 @@ export default function WorkoutView({
                             ? 'Cooldown Time'
                             : ''}
                     </Text>
-                    {currentPhase === 'work' && <Text style={styles.setText}>Set {currentSet} of {sets}</Text>}
-                    <TouchableOpacity style={styles.pauseButton} onPress={togglePause}>
-                        <Text style={styles.pauseButtonText}>{isPaused ? 'Resume' : 'Pause'}</Text>
-                    </TouchableOpacity>
+                    {currentPhase === 'work' && (
+                        <Text style={[styles.setText, { color: theme.colors.primary }]}>
+                            Set {currentSet} of {sets}
+                        </Text>
+                    )}
+                    <Button 
+                        mode="contained"
+                        onPress={togglePause}
+                        style={styles.pauseButton}
+                        labelStyle={styles.buttonText}
+                        icon={() => <Ionicons name={isPaused ? 'play' : 'pause'} size={24}  />}
+                    >
+                        {isPaused ? 'Resume' : 'Pause'}
+                    </Button>
                 </>
             )}
-            {currentPhase === 'finished' && <Text style={styles.finishedText}>Workout Complete!</Text>}
-            <TouchableOpacity style={styles.resetButton} onPress={resetWorkout}>
-                <Text style={styles.resetButtonText}>Reset</Text>
-            </TouchableOpacity>
+            {currentPhase === 'finished' && (
+                <Text style={[styles.finishedText, { color: theme.colors.tertiary }]}>
+                    Workout Complete!
+                </Text>
+            )}
+            <Button
+                mode="contained"
+                onPress={resetWorkout}
+                style={styles.resetButton}
+                labelStyle={styles.buttonText}
+                icon={() => <Ionicons name="refresh" size={24}  />}
+            >
+                Reset
+            </Button>
         </View>
     );
 }
@@ -54,13 +81,14 @@ export default function WorkoutView({
 function formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds
+        .toString()
+        .padStart(2, '0')}`;
 }
 
 const styles = StyleSheet.create({
     workoutContainer: {
         alignItems: 'center',
-        backgroundColor: '#f5f5f5',
         padding: 20,
         borderRadius: 10,
         shadowColor: "#000",
@@ -94,27 +122,16 @@ const styles = StyleSheet.create({
     finishedText: {
         fontSize: 36,
         fontWeight: 'bold',
-        color: '#4CAF50',
     },
     pauseButton: {
-        backgroundColor: '#FFA500',
-        padding: 15,
-        borderRadius: 5,
         marginTop: 20,
-    },
-    pauseButtonText: {
-        color: 'white',
-        fontSize: 18,
-        fontWeight: 'bold',
+        width: '80%',
     },
     resetButton: {
-        backgroundColor: '#f44336',
-        padding: 15,
-        borderRadius: 5,
         marginTop: 20,
+        width: '80%',
     },
-    resetButtonText: {
-        color: 'white',
+    buttonText: {
         fontSize: 18,
         fontWeight: 'bold',
     },
